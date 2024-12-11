@@ -1,8 +1,10 @@
-from abc import ABC, abstractmethod
+from abc import ABC
+from abc import abstractmethod
 from typing import Any
 from uuid import UUID
 
 from sqlalchemy.orm import DeclarativeBase
+
 
 class TokenControllerAbstract(ABC):
     @abstractmethod

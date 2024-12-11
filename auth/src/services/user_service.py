@@ -1,12 +1,14 @@
-from typing import Annotated, Any
+from typing import Annotated
+from typing import Any
 from uuid import UUID
 
 from fastapi import Depends
 from jwt_auth.exceptions import Exceptions
-
 from models.models import User
-from repositories.user_repository import UserRepository, get_user_repository
-from schemes.users import SignInRequestSchema, SignUpRequestSchema
+from repositories.user_repository import UserRepository
+from repositories.user_repository import get_user_repository
+from schemes.users import SignInRequestSchema
+from schemes.users import SignUpRequestSchema
 from utils import get_password_hash
 
 
@@ -39,7 +41,7 @@ class UserService:
         return response
 
     async def get_by_refresh(self, payload: dict[str, Any]) -> User | str:
-        account = await self.user_repository.find(payload["sub"])
+        account = await self.user_repository.find(payload['sub'])
         if account is None:
             return Exceptions.INVALID_TOKEN_REFRESH
 

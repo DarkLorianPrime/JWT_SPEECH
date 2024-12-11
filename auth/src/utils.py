@@ -1,11 +1,10 @@
 import bcrypt
 from fastapi.encoders import jsonable_encoder
 from pydantic import ValidationError
+from settings import settings
 from starlette import status
 from starlette.requests import Request
 from starlette.responses import JSONResponse
-
-from settings import settings
 
 
 async def pydantic_exception_handler(_: Request, exc: ValidationError):
@@ -13,7 +12,7 @@ async def pydantic_exception_handler(_: Request, exc: ValidationError):
         {
             'type': error['type'],
             'loc': error['loc'],
-            'message': error['msg'].lstrip('Value error,'),
+            'message': error['msg'].replace('Value error,', '', 1).lstrip(),
             'input': error['input'],
         }
         for error in exc.errors()

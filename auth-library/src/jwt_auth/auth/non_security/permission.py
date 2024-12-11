@@ -1,9 +1,14 @@
-from typing import Callable, Any
-from fastapi import Depends, HTTPException, Request
+from collections.abc import Callable
+from typing import Annotated
+from typing import Any
+
+from fastapi import Depends
+from fastapi import HTTPException
+from starlette.requests import Request
 from starlette.status import HTTP_403_FORBIDDEN
 
-from .auth import get_user
 from ...utils.check_role_request import get_roles
+from .auth import get_user
 
 
 class AccessController:
@@ -26,8 +31,8 @@ class AccessController:
 
         async def wrapper(
             request: Request,  # HTTP-запрос
-            payload: dict = Depends(get_user),  # Данные пользователя
-            dep: Any = Depends(dependency),  # Оборачиваемая зависимость
+            payload: Annotated[dict, Depends(get_user)],
+            dep: Annotated[Callable, Depends(dependency)],
         ) -> Any:
             """
             Обёртка для проверки доступа пользователя.
@@ -37,20 +42,19 @@ class AccessController:
             :return: Зависимость, если доступ разрешён.
             """
             if not self.hard_check:
-                user_roles = payload.get("roles", [])
-
+                user_roles = payload.get('roles', [])
 
                 has_permission = any(role in user_roles for role in self.roles)
             else:
                 roles_from_service = await get_roles(
-                    user_id=payload["sub"], headers=dict(request.headers)
+                    user_id=payload['sub'], headers=dict(request.headers)
                 )
                 roles_names = [role['name'] for role in roles_from_service]
 
                 has_permission = any(role in roles_names for role in self.roles)
 
             if has_permission:
-                return dep  # Возвращаем зависимость, если проверка успешна
+                return dep
 
             raise HTTPException(
                 status_code=HTTP_403_FORBIDDEN,

@@ -1,16 +1,15 @@
 from abc import ABC
 from typing import Annotated
 
+from database import get_session
 from fastapi import Depends
+from models.models import User
+from repositories.__meta__ import BaseRepository
+from schemes.users import SignInRequestSchema
 from sqlalchemy import and_
 from sqlalchemy import or_
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-
-from database import get_session
-from models.models import User
-from repositories.__meta__ import BaseRepository
-from schemes.users import SignInRequestSchema
 
 
 class AuthenticationMixin(BaseRepository, ABC):

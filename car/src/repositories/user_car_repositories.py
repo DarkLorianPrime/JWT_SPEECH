@@ -1,11 +1,10 @@
 from typing import Annotated
 
-from fastapi import Depends
-from sqlalchemy.ext.asyncio import AsyncSession
-
 from database import get_session
-from models.models import Car, CarUser
+from fastapi import Depends
+from models.models import CarUser
 from repositories.__meta__ import BaseRepository
+from sqlalchemy.ext.asyncio import AsyncSession
 
 
 class UserCarRepository(BaseRepository[CarUser]):
@@ -14,6 +13,6 @@ class UserCarRepository(BaseRepository[CarUser]):
 
 
 async def get_user_car_repository(
-        session: Annotated[AsyncSession, Depends(get_session)],
+    session: Annotated[AsyncSession, Depends(get_session)],
 ):
     return UserCarRepository(session=session)

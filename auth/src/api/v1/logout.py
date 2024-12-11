@@ -1,19 +1,19 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter
+from fastapi import Depends
 from jwt_auth.auth import get_user
-from starlette.requests import Request
-
 from models.models import User
 from schemes.users import RefreshRequestSchema
 from services.tokens_service import TokensService
+from starlette.requests import Request
 
-logout_router = APIRouter(prefix="/logout")
+logout_router = APIRouter(prefix='/logout')
 
 
 @logout_router.post(
-    "/",
-    summary="Выход из аккаунта",
+    '/',
+    summary='Выход из аккаунта',
     description="""Добавление refresh-токена в список инактивных.
     Добавление disable_all=False только для этого access токена""",
     response_model=None,
@@ -28,8 +28,8 @@ async def logout_session(
 
 
 @logout_router.post(
-    "/all",
-    summary="Выход из аккаунта для всех других сессий",
+    '/all',
+    summary='Выход из аккаунта для всех других сессий',
     description="""Добавление всех refresh-tokenов в неактивные.
     Добавление disable_all в redis для всех access токенов.""",
     response_model=None,

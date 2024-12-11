@@ -4,10 +4,11 @@ from datetime import timedelta
 from typing import Any
 
 import jwt
-from ..exceptions import Exceptions
-from .._globals import ctx
 from fastapi import HTTPException
 from starlette.status import HTTP_401_UNAUTHORIZED
+
+from .._globals import ctx
+from ..exceptions import Exceptions
 
 settings = ctx.auth_settings
 
@@ -51,7 +52,8 @@ async def get_credentials_from_token(token: str, key: str) -> dict[str, Any]:
         payload = jwt.decode(token, algorithms=[settings.jwt.ALGORITHM], key=key)
     except jwt.exceptions.PyJWTError as e:
         raise HTTPException(
-            status_code=HTTP_401_UNAUTHORIZED, detail=f'{Exceptions.INVALID_TOKEN_ACCESS}: {e}'
+            status_code=HTTP_401_UNAUTHORIZED,
+            detail=f'{Exceptions.INVALID_TOKEN_ACCESS}: {e}',
         ) from e
 
     payload_exceptions = await validate_payload(payload)

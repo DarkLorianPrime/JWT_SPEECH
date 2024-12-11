@@ -1,7 +1,8 @@
 from functools import cached_property
 
 from pydantic import Field
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic_settings import BaseSettings
+from pydantic_settings import SettingsConfigDict
 from sqlalchemy import URL
 
 
@@ -56,13 +57,13 @@ class PgSettings(BaseSettings):
         port = self.port
         dbname = self.dbname
         return URL(
-            drivername="postgresql+asyncpg",
+            drivername='postgresql+asyncpg',
             username=user,
             password=password,
             host=host,
             port=port,
             database=dbname,
-            query={} # type: ignore
+            query={},  # type: ignore
         )
 
 

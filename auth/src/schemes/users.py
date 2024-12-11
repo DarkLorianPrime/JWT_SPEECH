@@ -1,7 +1,6 @@
 import uuid
 
 from pydantic import BaseModel
-
 from schemes.__meta__ import BodyModel
 
 

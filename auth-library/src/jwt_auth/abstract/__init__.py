@@ -1,6 +1,4 @@
-from .classes import UserRepositoryAbstract, TokenControllerAbstract
+from .classes import TokenControllerAbstract
+from .classes import UserRepositoryAbstract
 
-__all__ = [
-    UserRepositoryAbstract,
-    TokenControllerAbstract
-]
+__all__ = [UserRepositoryAbstract, TokenControllerAbstract]

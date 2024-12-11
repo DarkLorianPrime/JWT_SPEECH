@@ -1,5 +1,3 @@
 from .settings import InitJWTAuth
 
-__all__ = [
-    InitJWTAuth
-]
+__all__ = [InitJWTAuth]

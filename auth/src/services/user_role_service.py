@@ -1,12 +1,13 @@
 from typing import Annotated
 
 from fastapi import Depends
+from models.models import Role
+from repositories.role_repository import RoleRepository
+from repositories.role_repository import get_role_repository
+from repositories.user_repository import UserRepository
+from repositories.user_repository import get_user_repository
 from starlette.exceptions import HTTPException
 from starlette.status import HTTP_400_BAD_REQUEST
-
-from models.models import Role
-from repositories.role_repository import RoleRepository, get_role_repository
-from repositories.user_repository import UserRepository, get_user_repository
 
 
 class UserRolesService:
@@ -23,7 +24,7 @@ class UserRolesService:
         user_role = await self.role_repository.get_by_query(Role.name == role_name)
         if user_role is None:
             raise HTTPException(
-                status_code=HTTP_400_BAD_REQUEST, detail="Роли нет в списке ролей"
+                status_code=HTTP_400_BAD_REQUEST, detail='Роли нет в списке ролей'
             )
         user = await self.user_repository.find(user_id)
         if user_role not in user.roles:

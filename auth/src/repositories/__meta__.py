@@ -1,13 +1,20 @@
 import abc
 import uuid
-from typing import TypeVar, Generic, Any
-
-from pydantic import BaseModel
-from sqlalchemy import exists, or_, Row, insert, select, ColumnExpressionArgument, update
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import InstrumentedAttribute
+from typing import Any
+from typing import Generic
+from typing import TypeVar
 
 from models import Base
+from pydantic import BaseModel
+from sqlalchemy import ColumnExpressionArgument
+from sqlalchemy import Row
+from sqlalchemy import exists
+from sqlalchemy import insert
+from sqlalchemy import or_
+from sqlalchemy import select
+from sqlalchemy import update
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import InstrumentedAttribute
 
 Model = TypeVar('Model', bound=Base)
 BaseDataModel = TypeVar('BaseDataModel', bound=BaseModel)
@@ -76,7 +83,10 @@ class BaseRepository(abc.ABC, Generic[Model]):
         return result_scalar.first()
 
     async def update(
-        self, returning_fields: list, *where: ColumnExpressionArgument[bool], **values: Any
+        self,
+        returning_fields: list,
+        *where: ColumnExpressionArgument[bool],
+        **values: Any,
     ) -> Row[tuple[Any]] | None:
         stmt = update(self.model).where(*where).values(**values).returning(*returning_fields)
         result = await self.session.execute(stmt)

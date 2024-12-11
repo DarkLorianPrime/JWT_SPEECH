@@ -1,4 +1,5 @@
 from collections.abc import Callable
+from typing import Annotated
 from typing import Any
 
 from fastapi import Depends
@@ -27,8 +28,8 @@ class AccessController:
         """
 
         async def wrapper(
-            user: DeclarativeBase = Depends(get_user),  # Данные пользователя
-            dep: Any = Depends(dependency),  # Оборачиваемая зависимость
+            user: Annotated[DeclarativeBase, Depends(get_user)],
+            dep: Annotated[Callable, Depends(dependency)],
         ) -> Any:
             """
             Обёртка для проверки доступа пользователя.

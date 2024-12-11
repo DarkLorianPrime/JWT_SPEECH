@@ -1,8 +1,10 @@
 import uuid
 
-from sqlalchemy import ForeignKey
-from sqlalchemy import String, Table, Column
 from sqlalchemy import UUID
+from sqlalchemy import Column
+from sqlalchemy import ForeignKey
+from sqlalchemy import String
+from sqlalchemy import Table
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship

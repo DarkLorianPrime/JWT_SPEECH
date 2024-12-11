@@ -1,12 +1,7 @@
-from uuid import uuid4
-
 from jwt_auth import InitJWTAuth
-from sqlalchemy import text
-
-from utils import get_password_hash
 from repositories.user_repository import get_user_repository
-from settings import JWTSettings
 from services.redis_service import get_tokens_controller
+from settings import JWTSettings
 
 InitJWTAuth(
     tokens_controller=get_tokens_controller,
@@ -14,23 +9,23 @@ InitJWTAuth(
     jwt=JWTSettings(),
 )
 
-from api import api_router
 from contextlib import asynccontextmanager
+from uuid import uuid4
 
-from fastapi import FastAPI
-from pydantic import ValidationError
-
+from api import api_router
 from database import engine
+from fastapi import FastAPI
 from models import Base
+from pydantic import ValidationError
+from sqlalchemy import text
+from utils import get_password_hash
 from utils import pydantic_exception_handler
 
 
 @asynccontextmanager
 async def lifespan(_):
     async with engine.begin() as conn:
-        is_role_exists = await conn.run_sync(
-            engine.dialect.has_table, table_name="role"
-        )
+        is_role_exists = await conn.run_sync(engine.dialect.has_table, table_name='role')
         await conn.run_sync(Base.metadata.create_all)
         if not is_role_exists:
             role_insert_query = text("""
@@ -42,12 +37,12 @@ async def lifespan(_):
             await conn.execute(
                 role_insert_query,
                 {
-                    "id1": str(uuid4()),
-                    "name1": "user",
-                    "active1": True,
-                    "id2": admin_id,
-                    "name2": "admin",
-                    "active2": True,
+                    'id1': str(uuid4()),
+                    'name1': 'user',
+                    'active1': True,
+                    'id2': admin_id,
+                    'name2': 'admin',
+                    'active2': True,
                 },
             )
 
@@ -59,21 +54,21 @@ async def lifespan(_):
             await conn.execute(
                 create_user_query,
                 {
-                    "id": user_id,
-                    "email": "admin@test.email",
-                    "username": "debug_user",
-                    "password": await get_password_hash("password"),
-                    "active": True,
+                    'id': user_id,
+                    'email': 'admin@test.email',
+                    'username': 'debug_user',
+                    'password': await get_password_hash('password'),
+                    'active': True,
                 },
             )
             await conn.execute(
                 create_user_query,
                 {
-                    "id": str(uuid4()),
-                    "email": "user@test.email",
-                    "username": "debug_user_2",
-                    "password": await get_password_hash("password"),
-                    "active": True,
+                    'id': str(uuid4()),
+                    'email': 'user@test.email',
+                    'username': 'debug_user_2',
+                    'password': await get_password_hash('password'),
+                    'active': True,
                 },
             )
 
@@ -84,8 +79,8 @@ async def lifespan(_):
             await conn.execute(
                 set_admin_query,
                 {
-                    "user_id": user_id,
-                    "role_id": admin_id,
+                    'user_id': user_id,
+                    'role_id': admin_id,
                 },
             )
 

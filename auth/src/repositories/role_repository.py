@@ -1,11 +1,10 @@
 from typing import Annotated
 
-from fastapi import Depends
-from sqlalchemy.ext.asyncio import AsyncSession
-
 from database import get_session
-from models.models import User, Role
+from fastapi import Depends
+from models.models import Role
 from repositories.__meta__ import BaseRepository
+from sqlalchemy.ext.asyncio import AsyncSession
 
 
 class RoleRepository(BaseRepository[Role]):
@@ -14,6 +13,6 @@ class RoleRepository(BaseRepository[Role]):
 
 
 async def get_role_repository(
-        session: Annotated[AsyncSession, Depends(get_session)],
+    session: Annotated[AsyncSession, Depends(get_session)],
 ):
     return RoleRepository(session=session)

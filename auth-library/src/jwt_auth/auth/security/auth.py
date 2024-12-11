@@ -2,18 +2,21 @@ import datetime
 from typing import Annotated
 from typing import Any
 
-from ...exceptions import Exceptions
 from fastapi import Depends
 from fastapi import HTTPException
 from fastapi.security import HTTPAuthorizationCredentials
 from fastapi.security import HTTPBearer
 from starlette.requests import Request
 from starlette.status import HTTP_401_UNAUTHORIZED
-from ...abstract import TokenControllerAbstract, UserRepositoryAbstract
-from ...utils.jwt_utils import get_credentials_from_token
+
 from ..._globals import ctx
+from ...abstract import TokenControllerAbstract
+from ...abstract import UserRepositoryAbstract
+from ...exceptions import Exceptions
+from ...utils.jwt_utils import get_credentials_from_token
 
 settings = ctx.auth_settings
+
 
 async def check_unavailable(jti_logout, jti_payload, disable_other, iat, disable_at):
     if jti_logout == jti_payload:
@@ -64,7 +67,9 @@ class UserBearer:
     async def __call__(
         self,
         payload: Annotated[dict, Depends(security)],
-        tokens_controller: Annotated[TokenControllerAbstract, Depends(settings.tokens_controller)],
+        tokens_controller: Annotated[
+            TokenControllerAbstract, Depends(settings.tokens_controller)
+        ],
         user_repository: Annotated[UserRepositoryAbstract, Depends(settings.user_repository)],
     ):
         account_id: str | None = payload.get('sub')

@@ -1,0 +1,38 @@
+[tool.ruff]
+line-length = 96
+indent-width = 4
+target-version = "py312"
+
+# Исключения для линтинга
+exclude = [
+    "**/migrations/*",
+    ".bzr", ".ddl", ".direnv", ".eggs", ".git", ".hg",
+    ".ipynb_checkpoints", ".mypy_cache", ".nox", ".pants.d",
+    ".pyenv", ".pytest_cache", ".pytype", ".ruff_cache",
+    ".svn", ".tox", ".venv", ".vscode", "__pypackages__",
+    "_build", "buck-out", "build", "dist", "node_modules",
+    "site-packages", "venv",
+]
+
+[tool.ruff.lint]
+select = [
+    "E", "F", "UP", "B", "SIM", "I", "A", "COM",
+    "C4", "T10", "T20", "ERA", "N", "PT", "ISC",
+]
+ignore = [
+    "F403", "COM812", "UP031", "ISC001",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F403", "F401"]
+"**/settings/*" = ["F405"]
+
+[tool.ruff.lint.isort]
+force-single-line = true
+known-third-party = ["jwt"]
+
+[tool.ruff.format]
+quote-style = "single"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
