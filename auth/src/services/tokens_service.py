@@ -6,6 +6,7 @@ from uuid import UUID
 
 from fastapi import Depends
 from jwt_auth._globals import ctx
+from jwt_auth.error_messages import ErrorMessages
 from jwt_auth.utils import create_access_token
 from jwt_auth.utils import create_refresh_token
 from jwt_auth.utils import get_credentials_from_token
@@ -92,10 +93,10 @@ class TokensService:
         await self.token_repository.create(token_history)
         await self.token_repository.commit()
 
-    async def get_by_jwt_id(self, jti: str | UUID) -> str | Row:
+    async def get_by_jwt_id(self, jti: str | UUID) -> ErrorMessages | Row:
         token_record = await self.token_repository.get_by_query(RefreshToken.token_id == jti)
         if token_record is None or not token_record.active:
-            return 'Token not available'
+            return ErrorMessages.TOKEN_NOT_AVAILABLE
 
         return token_record
 

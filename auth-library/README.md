@@ -1,12 +1,6 @@
 # Сборка AuthLibrary
 
-1. Открыть папку `auth-library`
-
-```bash
-cd auth-library
-```
-
-2. Создать wheel
+1. Создать wheel
 
 ```bash
 python setup.py bdist_wheel

@@ -8,7 +8,7 @@ from fastapi import HTTPException
 from starlette.status import HTTP_401_UNAUTHORIZED
 
 from .._globals import ctx
-from ..exceptions import Exceptions
+from ..error_messages import ErrorMessages
 
 settings = ctx.auth_settings
 
@@ -42,7 +42,7 @@ async def validate_payload(payload: dict[str, Any]) -> list[str]:
 
     expired_time = datetime.datetime.fromtimestamp(payload['exp'], settings.timezone)
     if expired_time < datetime.datetime.now(settings.timezone):
-        exceptions.append(Exceptions.REFRESH_TOKEN_EXPIRED)
+        exceptions.append(ErrorMessages.REFRESH_TOKEN_EXPIRED)
 
     return exceptions
 
@@ -53,7 +53,7 @@ async def get_credentials_from_token(token: str, key: str) -> dict[str, Any]:
     except jwt.exceptions.PyJWTError as e:
         raise HTTPException(
             status_code=HTTP_401_UNAUTHORIZED,
-            detail=f'{Exceptions.INVALID_TOKEN_ACCESS}: {e}',
+            detail=f'{ErrorMessages.INVALID_TOKEN_ACCESS}: {e}',
         ) from e
 
     payload_exceptions = await validate_payload(payload)

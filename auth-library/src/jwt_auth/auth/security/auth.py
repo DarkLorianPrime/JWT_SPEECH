@@ -12,7 +12,7 @@ from starlette.status import HTTP_401_UNAUTHORIZED
 from ..._globals import ctx
 from ...abstract import TokenControllerAbstract
 from ...abstract import UserRepositoryAbstract
-from ...exceptions import Exceptions
+from ...error_messages import ErrorMessages
 from ...utils.jwt_utils import get_credentials_from_token
 
 settings = ctx.auth_settings
@@ -42,7 +42,7 @@ class JWTBearer(HTTPBearer):
         if credentials is None:
             raise HTTPException(
                 status_code=HTTP_401_UNAUTHORIZED,
-                detail=Exceptions.INVALID_TOKEN_ACCESS,
+                detail=ErrorMessages.INVALID_TOKEN_ACCESS,
             )
 
         payload = await get_credentials_from_token(

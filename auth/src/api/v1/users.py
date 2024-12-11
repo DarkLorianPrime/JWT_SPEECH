@@ -4,6 +4,7 @@ from uuid import UUID
 from fastapi import APIRouter
 from fastapi import Depends
 from fastapi import HTTPException
+from jwt_auth.error_messages import ErrorMessages
 from jwt_auth.auth import get_user
 from jwt_auth.auth.security.permission import AccessController
 from models.models import User
@@ -63,11 +64,11 @@ async def refresh_tokens(
     token_service: Annotated[TokensService, Depends()],
 ):
     token, jwt_payload = await token_service.get_refresh_payload(credentials.refresh_token)
-    if isinstance(token, str):
+    if isinstance(token, ErrorMessages):
         raise HTTPException(status_code=HTTP_401_UNAUTHORIZED, detail=token)
 
     account = await account_service.get_by_refresh(jwt_payload)
-    if isinstance(account, str):
+    if isinstance(account, ErrorMessages):
         raise HTTPException(status_code=HTTP_401_UNAUTHORIZED, detail=account)
 
     await token_service.disable_refresh(jwt_payload, disable_other=False)

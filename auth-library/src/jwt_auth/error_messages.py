@@ -1,4 +1,7 @@
-class Exceptions:
+from enum import StrEnum
+
+
+class ErrorMessages(StrEnum):
     INVALID_TOKEN_REFRESH = 'Refresh token is invalid'
     INVALID_TOKEN_ACCESS = 'Authorization token is invalid'
     REFRESH_TOKEN_EXPIRED = 'Refresh token is expired'

@@ -3,7 +3,7 @@ from typing import Any
 from uuid import UUID
 
 from fastapi import Depends
-from jwt_auth.exceptions import Exceptions
+from jwt_auth.error_messages import ErrorMessages
 from models.models import User
 from repositories.user_repository import UserRepository
 from repositories.user_repository import get_user_repository
@@ -40,10 +40,10 @@ class UserService:
         response = await self.user_repository.get_by_query(credentials)
         return response
 
-    async def get_by_refresh(self, payload: dict[str, Any]) -> User | str:
+    async def get_by_refresh(self, payload: dict[str, Any]) -> User | ErrorMessages:
         account = await self.user_repository.find(payload['sub'])
         if account is None:
-            return Exceptions.INVALID_TOKEN_REFRESH
+            return ErrorMessages.INVALID_TOKEN_REFRESH
 
         return account
 

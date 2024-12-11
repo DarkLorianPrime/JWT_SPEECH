@@ -8,7 +8,9 @@ pip install setuptools
 ```
 
 В первую очередь собираем библиотеку:
-
+```bash
+cd auth-library/
+```
 [Инструкция по сборке библиотеки](auth-library/README.md)
 
 Дальше подготавливаем ENV
