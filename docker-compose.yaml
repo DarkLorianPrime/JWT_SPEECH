@@ -1,0 +1,84 @@
+name: "auth-speech-project"
+
+services:
+  auth-service:
+    container_name: auth-api
+    build:
+      context: .
+      dockerfile: auth/Dockerfile
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    volumes:
+      - "./auth/src:/application"
+    depends_on:
+      - auth-db
+
+  car-service:
+    container_name: car-api
+    build:
+      context: .
+      dockerfile: car/Dockerfile
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_CAR_PASSWORD}
+      - POSTGRES_USER=${POSTGRES_CAR_USER}
+      - POSTGRES_DB=${POSTGRES_CAR_DB}
+      - POSTGRES_PORT=${POSTGRES_CAR_PORT}
+      - POSTGRES_HOST=${POSTGRES_CAR_HOST}
+    ports:
+      - "8002:8000"
+    volumes:
+      - "./car/src:/application"
+    depends_on:
+      - car-db
+
+  auth-db:
+    image: postgres:16
+    container_name: auth-db
+    restart: always
+    volumes:
+      - ./.pg_data/auth_db/data:/var/lib/postgresql/data
+    environment:
+      - TZ=UTC
+    env_file:
+      - .env
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}" ]
+      interval: 3s
+      timeout: 5s
+      retries: 5
+  #  car-service:
+  car-db:
+    image: postgres:16
+    container_name: car-db
+    restart: always
+    volumes:
+      - ./.pg_data/car_db/data:/var/lib/postgresql/data
+    environment:
+      - TZ=UTC
+      - POSTGRES_PASSWORD=${POSTGRES_CAR_PASSWORD}
+      - POSTGRES_USER=${POSTGRES_CAR_USER}
+      - POSTGRES_DB=${POSTGRES_CAR_DB}
+      - POSTGRES_PORT=${POSTGRES_CAR_PORT}
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -d $$POSTGRES_DB -U $$POSTGRES_USER" ]
+      interval: 3s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7.2.5-bookworm
+    container_name: redis
+    env_file:
+      - .env
+    restart: always
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 1s
+      timeout: 3s
+      retries: 30
+    expose:
+      - "6379"
